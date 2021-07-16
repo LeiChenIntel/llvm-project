@@ -22,7 +22,7 @@
 #include "Standalone/StandaloneDialect.h"
 
 using namespace standalone;
-/*
+
 std::unique_ptr<standalone::ModuleAST> parseInputFile(llvm::StringRef filename) {
     llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> fileOrErr =
             llvm::MemoryBuffer::getFileOrSTDIN(filename);
@@ -35,12 +35,12 @@ std::unique_ptr<standalone::ModuleAST> parseInputFile(llvm::StringRef filename) 
     Parser parser(lexer);
     return parser.parseModule();
 }
-*/
+
 int main(int argc, char** argv) {
     std::cout << "Standalone pipeline" << std::endl;
     mlir::MLIRContext context;
     context.getOrLoadDialect<mlir::standalone::StandaloneDialect>();
-/*
+
     if(llvm::StringRef(argv[1]).endswith(".mlir")) {
         auto moduleAST = parseInputFile(argv[1]);
         if (!moduleAST)
@@ -51,6 +51,6 @@ int main(int argc, char** argv) {
 
         module->dump();
         return 0;
-    }*/
+    }
     return 0;
 }

@@ -14,8 +14,8 @@ include_directories(include/)
 #message("${CMAKE_CURRENT_BINARY_DIR}/..")
 add_llvm_executable(standalone-pipeline
     standalone-pipeline.cpp
-    #parser/AST.cpp
-    #mlir/MLIRGen.cpp
+    parser/AST.cpp
+    mlir/MLIRGen.cpp
     )
 target_link_libraries(standalone-pipeline
         PRIVATE
