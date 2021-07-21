@@ -64,12 +64,12 @@ struct StandaloneInlinerInterface : public DialectInlinerInterface {
     /// operation that takes 'input' as the only operand, and produces a single
     /// result of 'resultType'. If a conversion can not be generated, nullptr
     /// should be returned.
-    /*
+
     Operation *materializeCallConversion(OpBuilder &builder, Value input,
                                          Type resultType,
                                          Location conversionLoc) const final {
         return builder.create<CastOp>(conversionLoc, resultType, input);
-    }*/
+    }
 };
 
 //===----------------------------------------------------------------------===//
