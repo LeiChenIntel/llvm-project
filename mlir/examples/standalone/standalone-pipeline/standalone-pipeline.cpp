@@ -69,10 +69,10 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
     // Pre-processing
     pm.addPass(mlir::createInlinerPass());
 
-    //mlir::OpPassManager &optPM = pm.nest<mlir::FuncOp>();
+    mlir::OpPassManager &optPM = pm.nest<mlir::FuncOp>();
     //optPM.addPass(mlir::standalone::createShapeInferencePass());
-    //optPM.addPass(mlir::createCanonicalizerPass());
-    //optPM.addPass(mlir::createCSEPass());
+    optPM.addPass(mlir::createCanonicalizerPass());
+    optPM.addPass(mlir::createCSEPass());
 
     // Lower to Linalg
     /*

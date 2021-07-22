@@ -253,7 +253,7 @@ bool hasOperand() { return getNumOperands() != 0; }
 let verifier = [{ return ::verify(*this); }];
 }
 
-def TransposeOp : Standalone_Op<"transpose"> {
+def TransposeOp : Standalone_Op<"transpose", [NoSideEffect]> {
 let summary = "transpose operation";
 
 let arguments = (ins F64Tensor:$input);
@@ -262,6 +262,8 @@ let results = (outs F64Tensor);
 let assemblyFormat = [{
 `(` $input `:` type($input) `)` attr-dict `to` type(results)
 }];
+
+let hasCanonicalizer = 1;
 
 // Allow building a TransposeOp with from the input operand.
 let builders = [
