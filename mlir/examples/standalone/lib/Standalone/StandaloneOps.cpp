@@ -147,12 +147,16 @@ void AddOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
     state.addOperands({lhs, rhs});
 }
 
+/// Infer the output shape of the AddOp, this is required by the shape inference
+/// interface.
+void AddOp::inferShapes() { getResult().setType(getOperand(0).getType()); }
+
 //===----------------------------------------------------------------------===//
 // CastOp
 
 /// Infer the output shape of the CastOp, this is required by the shape
 /// inference interface.
-//void CastOp::inferShapes() { getResult().setType(getOperand().getType()); }
+void CastOp::inferShapes() { getResult().setType(getOperand().getType()); }
 
 /// Returns true if the given set of input and result types are compatible with
 /// this cast operation. This is required by the `CastOpInterface` to verify
@@ -199,6 +203,10 @@ void MulOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
     state.addOperands({lhs, rhs});
 }
 
+/// Infer the output shape of the MulOp, this is required by the shape inference
+/// interface.
+void MulOp::inferShapes() { getResult().setType(getOperand(0).getType()); }
+
 //===----------------------------------------------------------------------===//
 // ReturnOp
 
@@ -243,6 +251,12 @@ void TransposeOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
                         mlir::Value value) {
     state.addTypes(UnrankedTensorType::get(builder.getF64Type()));
     state.addOperands(value);
+}
+
+void TransposeOp::inferShapes() {
+    auto arrayTy = getOperand().getType().cast<RankedTensorType>();
+    SmallVector<int64_t, 2> dims(llvm::reverse(arrayTy.getShape()));
+    getResult().setType(RankedTensorType::get(dims, arrayTy.getElementType()));
 }
 
 static mlir::LogicalResult verify(TransposeOp op) {

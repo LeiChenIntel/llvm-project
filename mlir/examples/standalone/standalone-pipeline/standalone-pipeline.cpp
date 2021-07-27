@@ -70,7 +70,7 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
     pm.addPass(mlir::createInlinerPass());
 
     mlir::OpPassManager &optPM = pm.nest<mlir::FuncOp>();
-    //optPM.addPass(mlir::standalone::createShapeInferencePass());
+    optPM.addPass(mlir::standalone::createShapeInferencePass());
     optPM.addPass(mlir::createCanonicalizerPass());
     optPM.addPass(mlir::createCSEPass());
 

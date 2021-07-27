@@ -15,6 +15,7 @@
 #include "mlir/Interfaces/SideEffectInterfaces.h"
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/Operation.h"
+#include "Standalone/ShapeInferenceInterface.h"
 
 #define GET_OP_CLASSES
 #include "Standalone/StandaloneOps.h.inc"
