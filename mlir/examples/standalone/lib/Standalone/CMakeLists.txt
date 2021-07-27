@@ -8,7 +8,8 @@ add_mlir_dialect_library(MLIRStandalone
 
         DEPENDS
         MLIRStandaloneOpsIncGen
-		StandaloneShapeInferenceInterfaceIncGen
+	StandaloneShapeInferenceInterfaceIncGen
+	StandaloneCombineIncGen
 
 	LINK_LIBS PUBLIC
 	MLIRIR

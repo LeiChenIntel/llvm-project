@@ -310,6 +310,15 @@ void TransposeOp::getCanonicalizationPatterns(RewritePatternSet &results,
     results.add<SimplifyRedundantTranspose>(context);
 }
 
+/// Register our patterns as "canonicalization" patterns on the ReshapeOp so
+/// that they can be picked up by the Canonicalization framework.
+#include "Standalone/StandaloneCombine.inc"
+void ReshapeOp::getCanonicalizationPatterns(RewritePatternSet &results,
+                                            MLIRContext *context) {
+    results.add<ReshapeReshapeOptPattern, RedundantReshapeOptPattern,
+            FoldConstantReshapeOptPattern>(context);
+}
+
 
 #define GET_OP_CLASSES
 #include "Standalone/StandaloneOps.cpp.inc"

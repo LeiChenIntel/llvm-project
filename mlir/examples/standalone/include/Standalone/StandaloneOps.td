@@ -214,6 +214,9 @@ let results = (outs StaticShapeTensorOf<[F64]>);
 let assemblyFormat = [{
 `(` $input `:` type($input) `)` attr-dict `to` type(results)
 }];
+
+// Enable registering canonicalization patterns with this operation.
+let hasCanonicalizer = 1;
 }
 
 def ReturnOp : Standalone_Op<"return", [NoSideEffect, HasParent<"FuncOp">,
