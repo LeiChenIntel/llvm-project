@@ -83,9 +83,10 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
      */
 
     // Lower to Affine
-    /*
-    mlir::OpPassManager &optPM2 = pm.nest<mlir::FuncOp>();
-    optPM2.addPass(mlir::standalone::createLowerToAffinePass());
+    //mlir::OpPassManager &optPM2 = pm.nest<mlir::FuncOp>();
+    optPM.addPass(mlir::standalone::createLowerToAffinePass());
+    //std::cout << "Flag" << std::endl;
+/*
     optPM2.addPass(mlir::createCanonicalizerPass());
     optPM2.addPass(mlir::createCSEPass());
     optPM2.addPass(mlir::createLoopFusionPass());
