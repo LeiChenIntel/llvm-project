@@ -12,6 +12,7 @@
 #include "mlir/Parser.h"
 #include "mlir/Transforms/Passes.h"
 #include "mlir/Pass/PassManager.h"
+#include "mlir/Dialect/Affine/Passes.h"
 
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/ErrorOr.h"
@@ -83,15 +84,13 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
      */
 
     // Lower to Affine
-    //mlir::OpPassManager &optPM2 = pm.nest<mlir::FuncOp>();
     optPM.addPass(mlir::standalone::createLowerToAffinePass());
-    //std::cout << "Flag" << std::endl;
-/*
-    optPM2.addPass(mlir::createCanonicalizerPass());
-    optPM2.addPass(mlir::createCSEPass());
-    optPM2.addPass(mlir::createLoopFusionPass());
-    optPM2.addPass(mlir::createAffineScalarReplacementPass());
+    optPM.addPass(mlir::createCanonicalizerPass());
+    optPM.addPass(mlir::createCSEPass());
+    optPM.addPass(mlir::createLoopFusionPass());
+    optPM.addPass(mlir::createAffineScalarReplacementPass());
 
+/*
     // Lower to LLVM
     pm.addPass(mlir::standalone::createLowerToLLVMPass());
 */
