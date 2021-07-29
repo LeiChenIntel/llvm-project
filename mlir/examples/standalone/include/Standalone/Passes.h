@@ -14,7 +14,7 @@ namespace standalone {
 
     std::unique_ptr<mlir::Pass> createLowerToAffinePass();
 
-    //std::unique_ptr<mlir::Pass> createLowerToLLVMPass();
+    std::unique_ptr<mlir::Pass> createLowerToLLVMPass();
 }
 }
 
