@@ -13,11 +13,17 @@
 #include "mlir/Transforms/Passes.h"
 #include "mlir/Pass/PassManager.h"
 #include "mlir/Dialect/Affine/Passes.h"
+#include "mlir/Target/LLVMIR/Dialect/LLVMIR/LLVMToLLVMIRTranslation.h" // for registerLLVMDialectTranslation
+#include "mlir/Target/LLVMIR/Export.h" // for translateModuleToLLVMIR
+#include "mlir/ExecutionEngine/ExecutionEngine.h"
+#include "mlir/ExecutionEngine/OptUtils.h" // for makeOptimizingTransformer
 
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/ErrorOr.h"
 #include "llvm/Support/MemoryBuffer.h"
 #include "llvm/Support/raw_ostream.h"
+#include "llvm/IR/Module.h" // llvm::LLVMContext
+#include "llvm/Support/TargetSelect.h" // llvm::InitializeNativeTarget
 
 #include "Standalone/StandaloneDialect.h"
 
@@ -101,6 +107,25 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
     return 0;
 }
 
+int runJit(mlir::ModuleOp module) {
+    llvm::InitializeNativeTarget();
+    llvm::InitializeNativeTargetAsmPrinter();
+
+    mlir::registerLLVMDialectTranslation(*(module->getContext())); // Translate from "LLVM dialect" to "LLVM IR"
+
+    auto optPipeline = mlir::makeOptimizingTransformer(3, 0, nullptr);
+    auto maybeEngine = mlir::ExecutionEngine::create(module, /*llvmModuleBuilder=*/nullptr, optPipeline);
+    assert(maybeEngine && "failed to construct an execution engine");
+    auto &engine = maybeEngine.get();
+
+    auto invocationResult = engine->invokePacked("main");
+    if (invocationResult) {
+        llvm::errs() << "JIT invocation failed\n";
+        return -1;
+    }
+    return 0;
+}
+
 int main(int argc, char** argv) {
     std::cout << "Standalone pipeline" << std::endl;
     mlir::MLIRContext context;
@@ -128,5 +153,9 @@ int main(int argc, char** argv) {
         return error;
     }
 
-    return 0;
+    bool isRunJit = true;
+
+    if (isRunJit) {
+        return runJit(*module);
+    }
 }

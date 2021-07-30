@@ -25,5 +25,7 @@ target_link_libraries(standalone-pipeline
         MLIRParser
         MLIRSideEffectInterfaces
         MLIRTransforms
+        MLIRTargetLLVMIRExport
+        MLIRExecutionEngine
         MLIRStandalone
         )
