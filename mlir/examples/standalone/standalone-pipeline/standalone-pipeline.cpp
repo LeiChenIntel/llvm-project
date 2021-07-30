@@ -107,6 +107,28 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
     return 0;
 }
 
+int dumpLLVMIR(mlir::ModuleOp module) {
+    mlir::registerLLVMDialectTranslation(*module->getContext());
+    llvm::LLVMContext llvmContext;
+    auto llvmModule = mlir::translateModuleToLLVMIR(module, llvmContext);
+    if (!llvmModule) {
+        llvm::errs() << "Failed to emit LLVM IR\n";
+        return -1;
+    }
+
+    llvm::InitializeNativeTarget();
+    llvm::InitializeNativeTargetAsmPrinter();
+    mlir::ExecutionEngine::setupTargetTriple(llvmModule.get());
+
+    auto optPipeline = mlir::makeOptimizingTransformer(3, 0, nullptr);
+    if (auto err = optPipeline(llvmModule.get())) {
+        llvm::errs() << "Failed to optimize LLVM IR " << err << "\n";
+        return -1;
+    }
+    llvm::errs() << *llvmModule << "\n";
+    return 0;
+}
+
 int runJit(mlir::ModuleOp module) {
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
@@ -153,9 +175,12 @@ int main(int argc, char** argv) {
         return error;
     }
 
-    bool isRunJit = true;
+    bool isRunJit = false;
 
     if (isRunJit) {
         return runJit(*module);
+    }
+    else {
+        return dumpLLVMIR(*module);
     }
 }
