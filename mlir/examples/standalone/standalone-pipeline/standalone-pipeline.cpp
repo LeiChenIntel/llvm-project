@@ -175,7 +175,7 @@ int main(int argc, char** argv) {
         return error;
     }
 
-    bool isRunJit = false;
+    bool isRunJit = true;
 
     if (isRunJit) {
         return runJit(*module);

@@ -281,4 +281,17 @@ OpBuilder<(ins "Value":$input)>
 let verifier = [{ return ::verify(*this); }];
 }
 
+def MatmulOp : Standalone_Op<"matmul"> {
+let summary = "matmul operation";
+let description = [{
+The matrix multiply operation.
+}];
+let arguments = (ins F64Tensor:$leftInput, F64Tensor:$rightInput);
+let results = (outs F64Tensor);
+
+let builders = [
+OpBuilder<(ins "Value":$leftInput, "Value":$rightInput)>
+];
+}
+
 #endif // STANDALONE_OPS
