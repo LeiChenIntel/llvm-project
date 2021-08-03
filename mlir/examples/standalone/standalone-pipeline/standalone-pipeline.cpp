@@ -71,6 +71,10 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
   // TAG: 3. Add inliner pass.
   pm.addPass(mlir::createInlinerPass());
 
+  // TAG: 4. Add canonicalizer pass.
+  mlir::OpPassManager &optPM = pm.nest<mlir::FuncOp>();
+  optPM.addPass(mlir::createCanonicalizerPass());
+
   if (mlir::failed(pm.run(*module)))
     return 4;
 

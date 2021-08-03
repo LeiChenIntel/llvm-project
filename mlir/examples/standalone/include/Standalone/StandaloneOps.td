@@ -251,7 +251,7 @@ def ReturnOp : Standalone_Op<"return", [NoSideEffect, HasParent<"FuncOp">,
     let verifier = [{ return ::verify(*this); }];
 }
 
-def TransposeOp : Standalone_Op<"transpose"> {
+def TransposeOp : Standalone_Op<"transpose", [NoSideEffect]> {
     let summary = "transpose operation";
 
     let arguments = (ins F64Tensor:$input);
@@ -260,6 +260,8 @@ def TransposeOp : Standalone_Op<"transpose"> {
     let assemblyFormat = [{
         `(` $input `:` type($input) `)` attr-dict `to` type(results)
     }];
+
+    let hasCanonicalizer = 1;
 
     // Allow building a TransposeOp with from the input operand.
     let builders = [
