@@ -128,7 +128,7 @@ private:
 
     // Declare all the function arguments in the symbol table.
     for (const auto nameValue :
-        llvm::zip(protoArgs, entryBlock.getArguments())) {
+         llvm::zip(protoArgs, entryBlock.getArguments())) {
       if (failed(declare(std::get<0>(nameValue)->getName(),
                          std::get<1>(nameValue))))
         return nullptr;

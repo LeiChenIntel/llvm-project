@@ -1,17 +1,17 @@
 //
 // Created by leichen1 on 2021/8/2.
 //
-#include <iostream>
 #include "MLIRGen.h"
 #include "Parser.h"
+#include <iostream>
 
 #include "mlir/IR/AsmState.h"
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/MLIRContext.h"
 #include "mlir/IR/Verifier.h"
 #include "mlir/Parser.h"
-#include "mlir/Transforms/Passes.h"
 #include "mlir/Pass/PassManager.h"
+#include "mlir/Transforms/Passes.h"
 
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/CommandLine.h"
@@ -24,7 +24,8 @@
 
 using namespace standalone;
 
-std::unique_ptr<standalone::ModuleAST> parseInputFile(llvm::StringRef filename) {
+std::unique_ptr<standalone::ModuleAST>
+parseInputFile(llvm::StringRef filename) {
   llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> fileOrErr =
       llvm::MemoryBuffer::getFileOrSTDIN(filename);
   if (std::error_code ec = fileOrErr.getError()) {
@@ -37,11 +38,11 @@ std::unique_ptr<standalone::ModuleAST> parseInputFile(llvm::StringRef filename) 
   return parser.parseModule();
 }
 
-static char* inputFilename;
+static char *inputFilename;
 
 int loadMLIR(mlir::MLIRContext &context, mlir::OwningModuleRef &module) {
   // TAG: 1. Translate from .standalone to .ast and then to .mlir.
-  if(!llvm::StringRef(inputFilename).endswith(".mlir")) {
+  if (!llvm::StringRef(inputFilename).endswith(".mlir")) {
     auto moduleAST = parseInputFile(inputFilename);
     if (!moduleAST) {
       return 6;

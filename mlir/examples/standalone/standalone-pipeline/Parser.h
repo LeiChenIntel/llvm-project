@@ -116,8 +116,8 @@ private:
     /// If there is any nested array, process all of them and ensure that
     /// dimensions are uniform.
     if (llvm::any_of(values, [](std::unique_ptr<ExprAST> &expr) {
-      return llvm::isa<LiteralExprAST>(expr.get());
-    })) {
+          return llvm::isa<LiteralExprAST>(expr.get());
+        })) {
       auto *firstLiteral = llvm::dyn_cast<LiteralExprAST>(values.front().get());
       if (!firstLiteral)
         return parseError<ExprAST>("uniform well-nested dimensions",

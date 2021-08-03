@@ -8,8 +8,8 @@
 
 #include "Standalone/StandaloneOps.h"
 #include "Standalone/StandaloneDialect.h"
-#include "mlir/IR/OpImplementation.h"
 #include "mlir/IR/Builders.h"
+#include "mlir/IR/OpImplementation.h"
 
 using namespace mlir;
 using namespace mlir::standalone;
@@ -115,18 +115,18 @@ static mlir::LogicalResult verify(ConstantOp op) {
   auto attrType = op.value().getType().cast<mlir::TensorType>();
   if (attrType.getRank() != resultType.getRank()) {
     return op.emitOpError(
-        "return type must match the one of the attached value "
-        "attribute: ")
-        << attrType.getRank() << " != " << resultType.getRank();
+               "return type must match the one of the attached value "
+               "attribute: ")
+           << attrType.getRank() << " != " << resultType.getRank();
   }
 
   // Check that each of the dimensions match between the two types.
   for (int dim = 0, dimE = attrType.getRank(); dim < dimE; ++dim) {
     if (attrType.getShape()[dim] != resultType.getShape()[dim]) {
       return op.emitOpError(
-          "return type shape mismatches its attribute at dimension ")
-          << dim << ": " << attrType.getShape()[dim]
-          << " != " << resultType.getShape()[dim];
+                 "return type shape mismatches its attribute at dimension ")
+             << dim << ": " << attrType.getShape()[dim]
+             << " != " << resultType.getShape()[dim];
     }
   }
   return mlir::success();
@@ -205,9 +205,9 @@ static mlir::LogicalResult verify(ReturnOp op) {
   const auto &results = function.getType().getResults();
   if (op.getNumOperands() != results.size())
     return op.emitOpError()
-        << "does not return the same number of values ("
-        << op.getNumOperands() << ") as the enclosing function ("
-        << results.size() << ")";
+           << "does not return the same number of values ("
+           << op.getNumOperands() << ") as the enclosing function ("
+           << results.size() << ")";
 
   // If the operation does not have an input, we are done.
   if (!op.hasOperand())
@@ -245,7 +245,7 @@ static mlir::LogicalResult verify(TransposeOp op) {
   if (!std::equal(inputShape.begin(), inputShape.end(),
                   resultType.getShape().rbegin())) {
     return op.emitError()
-        << "expected result shape to be a transpose of the input";
+           << "expected result shape to be a transpose of the input";
   }
   return mlir::success();
 }

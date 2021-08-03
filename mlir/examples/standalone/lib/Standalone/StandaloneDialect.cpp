@@ -62,7 +62,7 @@ struct StandaloneInlinerInterface : public DialectInlinerInterface {
   Operation *materializeCallConversion(OpBuilder &builder, Value input,
                                        Type resultType,
                                        Location conversionLoc) const final {
-      return builder.create<CastOp>(conversionLoc, resultType, input);
+    return builder.create<CastOp>(conversionLoc, resultType, input);
   }
 };
 
