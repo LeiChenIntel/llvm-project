@@ -75,6 +75,9 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
   mlir::OpPassManager &optPM = pm.nest<mlir::FuncOp>();
   optPM.addPass(mlir::createCanonicalizerPass());
 
+  // TAG: 5. Add CSE pass.
+  optPM.addPass(mlir::createCSEPass());
+
   if (mlir::failed(pm.run(*module)))
     return 4;
 
