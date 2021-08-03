@@ -10,6 +10,8 @@
 #include "mlir/IR/MLIRContext.h"
 #include "mlir/IR/Verifier.h"
 #include "mlir/Parser.h"
+#include "mlir/Transforms/Passes.h"
+#include "mlir/Pass/PassManager.h"
 
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/CommandLine.h"
@@ -35,21 +37,56 @@ std::unique_ptr<standalone::ModuleAST> parseInputFile(llvm::StringRef filename) 
   return parser.parseModule();
 }
 
+static char* inputFilename;
+
+int loadMLIR(mlir::MLIRContext &context, mlir::OwningModuleRef &module) {
+  // TAG: 1. Translate from .standalone to .ast and then to .mlir.
+  if(!llvm::StringRef(inputFilename).endswith(".mlir")) {
+    auto moduleAST = parseInputFile(inputFilename);
+    if (!moduleAST) {
+      return 6;
+    }
+    module = mlirGen(context, *moduleAST);
+    if (!module) {
+      return 1;
+    }
+    module->dump();
+    std::cout << "loadMLIR dump end" << std::endl;
+    return 0;
+  }
+  return 0;
+}
+
+int loadAndProcessMLIR(mlir::MLIRContext &context,
+                       mlir::OwningModuleRef &module) {
+  if (int error = loadMLIR(context, module)) {
+    return error;
+  }
+
+  // TAG: 2. Add pass.
+  mlir::PassManager pm(&context);
+  applyPassManagerCLOptions(pm);
+
+  // TAG: 3. Add inliner pass.
+  pm.addPass(mlir::createInlinerPass());
+
+  if (mlir::failed(pm.run(*module)))
+    return 4;
+
+  module->dump();
+  std::cout << "loadAndProcessMLIR dump end" << std::endl;
+  return 0;
+}
+
 int main(int argc, char **argv) {
   std::cout << "Standalone pipeline" << std::endl;
   mlir::MLIRContext context;
   context.getOrLoadDialect<mlir::standalone::StandaloneDialect>();
 
-  if(!llvm::StringRef(argv[1]).endswith(".mlir")) {
-    auto moduleAST = parseInputFile(argv[1]);
-    if (!moduleAST)
-      return 6;
-    mlir::OwningModuleRef module = mlirGen(context, *moduleAST);
-    if (!module)
-      return 1;
-
-    module->dump();
-    return 0;
+  inputFilename = argv[1];
+  mlir::OwningModuleRef module;
+  if (int error = loadAndProcessMLIR(context, module)) {
+    return error;
   }
 
   return 0;
