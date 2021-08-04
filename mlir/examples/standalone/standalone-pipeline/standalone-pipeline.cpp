@@ -87,6 +87,9 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
   optPM.addPass(mlir::createLoopFusionPass());
   optPM.addPass(mlir::createMemRefDataFlowOptPass());
 
+  // TAG: Lower to LLVM.
+  pm.addPass(mlir::standalone::createLowerToLLVMPass());
+
   if (mlir::failed(pm.run(*module)))
     return 4;
 
