@@ -80,6 +80,9 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
   // TAG: Add CSE pass.
   optPM.addPass(mlir::createCSEPass());
 
+  // TAG: Lower to Affine.
+  optPM.addPass(mlir::standalone::createLowerToAffinePass());
+
   if (mlir::failed(pm.run(*module)))
     return 4;
 
