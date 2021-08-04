@@ -10,6 +10,7 @@
 #define STANDALONE_OPS
 
 include "StandaloneDialect.td"
+include "ShapeInferenceInterface.td"
 include "mlir/Interfaces/CastInterfaces.td"
 include "mlir/Interfaces/CallInterfaces.td"
 include "mlir/Interfaces/SideEffectInterfaces.td"
@@ -82,7 +83,10 @@ def ConstantOp : Standalone_Op<"constant", [NoSideEffect]> {
     let verifier = [{ return ::verify(*this); }];
 }
 
-def AddOp : Standalone_Op<"add"> {
+def AddOp : Standalone_Op<"add", [
+NoSideEffect,
+DeclareOpInterfaceMethods<ShapeInferenceOpInterface>
+]> {
     let summary = "element-wise addition operation";
     let description = [{
         The "add" operation performs element-wise addition between two tensors.
@@ -104,6 +108,7 @@ def AddOp : Standalone_Op<"add"> {
 
 def CastOp : Standalone_Op<"cast", [
 DeclareOpInterfaceMethods<CastOpInterface>,
+DeclareOpInterfaceMethods<ShapeInferenceOpInterface>,
 NoSideEffect,
 SameOperandsAndResultShape
 ]> {
@@ -159,7 +164,10 @@ DeclareOpInterfaceMethods<CallOpInterface>
     ];
 }
 
-def MulOp : Standalone_Op<"mul"> {
+def MulOp : Standalone_Op<"mul", [
+NoSideEffect,
+DeclareOpInterfaceMethods<ShapeInferenceOpInterface>
+]> {
     let summary = "element-wise multiplication operation";
     let description = [{
         The "mul" operation performs element-wise multiplication between two
@@ -251,7 +259,10 @@ def ReturnOp : Standalone_Op<"return", [NoSideEffect, HasParent<"FuncOp">,
     let verifier = [{ return ::verify(*this); }];
 }
 
-def TransposeOp : Standalone_Op<"transpose", [NoSideEffect]> {
+def TransposeOp : Standalone_Op<"transpose", [
+NoSideEffect,
+DeclareOpInterfaceMethods<ShapeInferenceOpInterface>
+]> {
     let summary = "transpose operation";
 
     let arguments = (ins F64Tensor:$input);

@@ -9,6 +9,7 @@
 #ifndef STANDALONE_STANDALONEOPS_H
 #define STANDALONE_STANDALONEOPS_H
 
+#include "Standalone/ShapeInferenceInterface.h"
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/IR/Dialect.h"

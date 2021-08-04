@@ -20,6 +20,7 @@
 #include "llvm/Support/SourceMgr.h"
 #include "llvm/Support/raw_ostream.h"
 
+#include "Standalone/Passes.h"
 #include "Standalone/StandaloneDialect.h"
 
 using namespace standalone;
@@ -68,14 +69,15 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
   mlir::PassManager pm(&context);
   applyPassManagerCLOptions(pm);
 
-  // TAG: 3. Add inliner pass.
+  // TAG: Add inliner pass.
   pm.addPass(mlir::createInlinerPass());
 
-  // TAG: 4. Add canonicalizer pass.
   mlir::OpPassManager &optPM = pm.nest<mlir::FuncOp>();
+  // TAG: Add shape inference pass.
+  optPM.addPass(mlir::standalone::createShapeInferencePass());
+  // TAG: Add canonicalizer pass.
   optPM.addPass(mlir::createCanonicalizerPass());
-
-  // TAG: 5. Add CSE pass.
+  // TAG: Add CSE pass.
   optPM.addPass(mlir::createCSEPass());
 
   if (mlir::failed(pm.run(*module)))
