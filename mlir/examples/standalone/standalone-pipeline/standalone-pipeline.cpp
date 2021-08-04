@@ -82,6 +82,10 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
 
   // TAG: Lower to Affine.
   optPM.addPass(mlir::standalone::createLowerToAffinePass());
+  optPM.addPass(mlir::createCanonicalizerPass());
+  optPM.addPass(mlir::createCSEPass());
+  optPM.addPass(mlir::createLoopFusionPass());
+  optPM.addPass(mlir::createMemRefDataFlowOptPass());
 
   if (mlir::failed(pm.run(*module)))
     return 4;
