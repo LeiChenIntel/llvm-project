@@ -1,15 +1,16 @@
 add_mlir_dialect_library(MLIRStandalone
-		StandaloneDialect.cpp
-		StandaloneOps.cpp
-		ShapeInferencePass.cpp
+        StandaloneDialect.cpp
+        StandaloneOps.cpp
+        ShapeInferencePass.cpp
 
-		ADDITIONAL_HEADER_DIRS
-		${PROJECT_SOURCE_DIR}/include/Standalone
+        ADDITIONAL_HEADER_DIRS
+        ${PROJECT_SOURCE_DIR}/include/Standalone
 
-		DEPENDS
-		MLIRStandaloneOpsIncGen
-		StandaloneShapeInferenceInterfaceIncGen
+        DEPENDS
+        MLIRStandaloneOpsIncGen
+        StandaloneShapeInferenceInterfaceIncGen
+        StandaloneCombineIncGen
 
-		LINK_LIBS PUBLIC
-		MLIRIR
-		)
+        LINK_LIBS PUBLIC
+        MLIRIR
+        )
