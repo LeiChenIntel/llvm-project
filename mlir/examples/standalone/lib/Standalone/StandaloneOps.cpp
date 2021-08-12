@@ -315,5 +315,21 @@ void ReshapeOp::getCanonicalizationPatterns(OwningRewritePatternList &results,
                  FoldConstantReshapeOptPattern>(context);
 }
 
+/// Define matrix multiplication
+void MatmulOp::build(::mlir::OpBuilder &odsBuilder,
+                     ::mlir::OperationState &odsState, Value leftInput,
+                     Value rightInput) {
+  odsState.addTypes(UnrankedTensorType::get(odsBuilder.getF64Type()));
+  odsState.addOperands(leftInput);
+  odsState.addOperands(rightInput);
+}
+
+void MatmulOp::inferShapes() {
+  auto lhsTy = getOperands()[0].getType().cast<RankedTensorType>();
+  auto rhsTy = getOperands()[1].getType().cast<RankedTensorType>();
+  SmallVector<int64_t, 2> dims{lhsTy.getShape()[0], rhsTy.getShape()[1]};
+  getResult().setType(RankedTensorType::get(dims, lhsTy.getElementType()));
+}
+
 #define GET_OP_CLASSES
 #include "Standalone/StandaloneOps.cpp.inc"

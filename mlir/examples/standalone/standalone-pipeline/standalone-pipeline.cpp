@@ -85,10 +85,10 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
 
   // TAG: Lower to Affine.
   optPM.addPass(mlir::standalone::createLowerToAffinePass());
-  optPM.addPass(mlir::createCanonicalizerPass());
-  optPM.addPass(mlir::createCSEPass());
-  optPM.addPass(mlir::createLoopFusionPass());
-  optPM.addPass(mlir::createMemRefDataFlowOptPass());
+  //optPM.addPass(mlir::createCanonicalizerPass());
+  //optPM.addPass(mlir::createCSEPass());
+  //optPM.addPass(mlir::createLoopFusionPass());
+  //optPM.addPass(mlir::createMemRefDataFlowOptPass());
 
   // TAG: Lower to LLVM.
   pm.addPass(mlir::standalone::createLowerToLLVMPass());
@@ -130,6 +130,9 @@ int main(int argc, char **argv) {
     return error;
   }
 
-  std::cout << "Standalone results:" << std::endl;
-  return runJit(*module);
+  if (argc == 3) {
+    std::cout << "Standalone results:" << std::endl;
+    return runJit(*module);
+  }
+  return 0;
 }

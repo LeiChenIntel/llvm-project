@@ -286,4 +286,16 @@ DeclareOpInterfaceMethods<ShapeInferenceOpInterface>
     let verifier = [{ return ::verify(*this); }];
 }
 
+def MatmulOp : Standalone_Op<"matmul", [
+NoSideEffect,
+DeclareOpInterfaceMethods<ShapeInferenceOpInterface>
+]> {
+    let arguments = (ins F64Tensor:$leftInput, F64Tensor:$rightInput);
+    let results = (outs F64Tensor);
+
+    let builders = [
+        OpBuilderDAG<(ins "Value":$leftInput, "Value":$rightInput)>
+    ];
+}
+
 #endif // STANDALONE_OPS
