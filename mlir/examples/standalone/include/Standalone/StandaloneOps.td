@@ -287,7 +287,6 @@ DeclareOpInterfaceMethods<ShapeInferenceOpInterface>
 }
 
 def MatmulOp : Standalone_Op<"matmul", [
-NoSideEffect,
 DeclareOpInterfaceMethods<ShapeInferenceOpInterface>
 ]> {
     let arguments = (ins F64Tensor:$leftInput, F64Tensor:$rightInput);

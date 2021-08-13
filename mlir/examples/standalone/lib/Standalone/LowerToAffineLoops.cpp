@@ -250,7 +250,7 @@ struct TransposeOpLowering : public ConversionPattern {
 };
 
 // RewritePatterns: Matrix multiplication operation
-
+/*
 struct MatmulOpLowering : public ConversionPattern {
   MatmulOpLowering(MLIRContext *ctx)
       : ConversionPattern(standalone::MatmulOp::getOperationName(), 1, ctx) {}
@@ -294,7 +294,7 @@ struct MatmulOpLowering : public ConversionPattern {
           auto valueToAdd =
               nestedBuilder.create<MulFOp>(loc, loadedLhs, loadedRhs);
           auto valueToStore =
-              nestedBuilder.create<AddFOp>(loc, loadedResult, valueToAdd);
+              nestedBuilder.create<AddFOp>(loc, valueToAdd, valueToAdd);
 
           nestedBuilder.create<AffineStoreOp>(loc, valueToStore, resultAlloc,
                                               resultIvs);
@@ -304,6 +304,7 @@ struct MatmulOpLowering : public ConversionPattern {
     return success();
   }
 };
+*/
 
 void StandaloneToAffineLoweringPass::runOnFunction() {
   auto function = getFunction();
@@ -342,7 +343,7 @@ void StandaloneToAffineLoweringPass::runOnFunction() {
   patterns
       .insert<BinaryOpLowering<standalone::AddOp, AddFOp>, ConstantOpLowering,
               BinaryOpLowering<standalone::MulOp, MulFOp>, ReturnOpLowering,
-              TransposeOpLowering, MatmulOpLowering>(&getContext());
+              TransposeOpLowering>(&getContext());
 
   // With the target and rewrite patterns defined, we can now attempt the
   // conversion. The conversion will signal failure if any of our `illegal`

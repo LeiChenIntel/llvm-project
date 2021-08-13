@@ -4,6 +4,7 @@ add_mlir_dialect_library(MLIRStandalone
         ShapeInferencePass.cpp
         LowerToAffineLoops.cpp
         LowerToLLVM.cpp
+        LowerToLinalg.cpp
 
         ADDITIONAL_HEADER_DIRS
         ${PROJECT_SOURCE_DIR}/include/Standalone

@@ -5,6 +5,8 @@
 #include "Parser.h"
 #include <iostream>
 
+#include "mlir/Dialect/Linalg/Passes.h"
+#include "mlir/Dialect/Affine/Passes.h"
 #include "mlir/ExecutionEngine/ExecutionEngine.h"
 #include "mlir/ExecutionEngine/OptUtils.h" // for makeOptimizingTransformer
 #include "mlir/IR/AsmState.h"
@@ -83,8 +85,12 @@ int loadAndProcessMLIR(mlir::MLIRContext &context,
   // TAG: Add CSE pass.
   optPM.addPass(mlir::createCSEPass());
 
+  // TAG: Lower to Linalg.
+  optPM.addPass(mlir::standalone::createLowerToLinalgPass());
+
   // TAG: Lower to Affine.
   optPM.addPass(mlir::standalone::createLowerToAffinePass());
+  optPM.addPass(mlir::createConvertLinalgToAffineLoopsPass());
   //optPM.addPass(mlir::createCanonicalizerPass());
   //optPM.addPass(mlir::createCSEPass());
   //optPM.addPass(mlir::createLoopFusionPass());
