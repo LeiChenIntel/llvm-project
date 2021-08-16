@@ -281,22 +281,22 @@ struct MatmulOpLowering : public ConversionPattern {
           // ValueRange ivs? Relation between lower-bounds, upper-bounds?
           // a list of loop induction variables
 
-          auto loadedLhs = nestedBuilder.create<AffineLoadOp>(
+          Value loadedLhs = nestedBuilder.create<LoadOp>(
               loc, matmulAdaptor.leftInput(),
               ValueRange{ivs[0], ivs[2]}); // i, k
-          auto loadedRhs = nestedBuilder.create<AffineLoadOp>(
+          Value loadedRhs = nestedBuilder.create<LoadOp>(
               loc, matmulAdaptor.rightInput(),
               ValueRange{ivs[2], ivs[1]}); // k, j
 
           ValueRange resultIvs{ivs[0], ivs[1]}; // i, j
-          auto loadedResult =
-              nestedBuilder.create<AffineLoadOp>(loc, resultAlloc, resultIvs);
-          auto valueToAdd =
+          Value loadedResult =
+              nestedBuilder.create<LoadOp>(loc, resultAlloc, resultIvs);
+          Value valueToAdd =
               nestedBuilder.create<MulFOp>(loc, loadedLhs, loadedRhs);
-          auto valueToStore =
-              nestedBuilder.create<AddFOp>(loc, loadedResult, valueToAdd);
+          Value valueToStore =
+              nestedBuilder.create<AddFOp>(loc, valueToAdd, loadedResult);
 
-          nestedBuilder.create<AffineStoreOp>(loc, valueToStore, resultAlloc,
+          nestedBuilder.create<StoreOp>(loc, valueToStore, resultAlloc,
                                               resultIvs);
         });
 

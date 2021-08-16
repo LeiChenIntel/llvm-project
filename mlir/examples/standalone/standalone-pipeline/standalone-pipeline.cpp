@@ -105,7 +105,8 @@ int runJit(mlir::ModuleOp module) {
   llvm::InitializeNativeTarget();
   llvm::InitializeNativeTargetAsmPrinter();
 
-  auto optPipeline = mlir::makeOptimizingTransformer(3, 0, nullptr);
+  // optLevel = 3 makes matmul nan. Set to 0 for debug.
+  auto optPipeline = mlir::makeOptimizingTransformer(0, 0, nullptr);
   auto maybeEngine = mlir::ExecutionEngine::create(
       module, /*llvmModuleBuilder=*/nullptr, optPipeline);
   assert(maybeEngine && "failed to construct an execution engine");
